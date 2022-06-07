@@ -4,6 +4,8 @@ from peer import *
 from block import *
 import consensus
 from blockchain import *
+import re
+from StrParser import *
 
 # p1 = Peer()
 # p2 = Peer()
@@ -45,12 +47,24 @@ from blockchain import *
 # # print(block.header(11))
 # print(consensus.mine(block))
 
+
 net = BlockChain()
 net.create_genesis_block(11, 5000)
 p1 = net.peers[0]
 p2 = net.peers[1]
 p1.create_transaction(p2.wallet.addrs[-1], 200)
 print(p1.current_tx)
-print(p1.current_tx.tx_in)
-print(p1.current_tx.to_string())
+tx_string = p1.current_tx.to_string()
+print(tx_string)
 print(p2.verify_transaction(p1.current_tx))
+# process = re.split(r'(?:[\[\]])',  tx_string)
+# process = RemoveNone(process)
+# tx_in = VinParser(process[0])
+# print(tx_in)
+# print(p1.current_tx.tx_out)
+# tx_out = VoutParser(process[1])
+# print(tx_out)
+# print(process[2])
+Tx_new = TxParser(tx_string)
+print(Tx_new)
+print(Tx_new.to_string() == tx_string)

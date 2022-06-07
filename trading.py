@@ -17,6 +17,9 @@ class Pointer(tuple):
     def n(self):
         return self[1]
 
+    def __repr__(self):
+        return "Pointer(tx_id:{0},n:{1})".format(self[0], self[1])
+
 
 class Vin(tuple):
     """
@@ -42,6 +45,9 @@ class Vin(tuple):
     def sig_script(self):
         return self[3]
 
+    def __repr__(self):
+        return "Vin(to_spend:{0},signature:{1},pubkey:{2})".format(self[0], self[1], self[2])
+
 
 class Vout(tuple):
     """
@@ -63,6 +69,9 @@ class Vout(tuple):
     def pubkey_script(self):
         script = "OP_DUP OP_ADDR {0} OP_EQ OP_CHECKSIG".format(self[0])
         return script
+
+    def __repr__(self):
+        return "Vout(to_addr:{0},value:{1})".format(self[0], self[1])
 
 
 class Tx(tuple):
@@ -102,6 +111,9 @@ class Tx(tuple):
     def to_string(self):
         return "{0}{1}{2}".format(self[0], self[1], self[3])
 
+    def __repr__(self):
+        return "Tx(id:{0})".format(self.id)
+
 
 class UTXO(tuple):
     def __new__(cls, vout, pointer, is_coinbase, unspent=True, confirmed=False):
@@ -133,3 +145,6 @@ class UTXO(tuple):
 
     def _replace(self, unspent=True, confirmed=False):
         return UTXO(self[0], self[1], self[2], unspent, confirmed)
+
+    def __repr__(self):
+        return "UTXO(vout:{0},pointer:{1})".format(self[0], self[1])
