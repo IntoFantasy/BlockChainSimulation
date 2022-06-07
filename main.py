@@ -49,5 +49,8 @@ net = BlockChain()
 net.create_genesis_block(11, 5000)
 p1 = net.peers[0]
 p2 = net.peers[1]
-p1.create_candidate_block()
-print(p1.addr)
+p1.create_transaction(p2.wallet.addrs[-1], 200)
+print(p1.current_tx)
+print(p1.current_tx.tx_in)
+print(p1.current_tx.to_string())
+print(p2.verify_transaction(p1.current_tx))

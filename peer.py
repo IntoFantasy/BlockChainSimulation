@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 def build_message(string):
-    return hashlib.sha256(string).hexdigest().encode()
+    return hashlib.sha256(string.encode()).hexdigest().encode()
 
 
 class Peer:
@@ -263,7 +263,7 @@ def create_normal_tx(peer, to_addr, value):
     for utxo in utxos[:n]:
         addr = utxo.vout.to_addr
         idx = wallet.addrs.index(addr)
-        sk, pk = wallet.keys[idx].sk, wallet.keys[idx].pk
+        sk, pk = wallet.keys[idx][0], wallet.keys[idx][1]
 
         string = str(utxo.pointer) + str(pk) + str(tx_out)
         message = build_message(string)
