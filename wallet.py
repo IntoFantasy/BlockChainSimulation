@@ -58,7 +58,7 @@ class Wallet:
         public_key = rsa.publickey().exportKey()
         self.keys.append((private_key, public_key))
         # 生成地址(待定)
-        addr = convert_pubkey_to_addr(private_key)
+        addr = convert_pubkey_to_addr(public_key)
         self.addrs.append(addr)
 
     @property

@@ -4,6 +4,7 @@ import logging
 from config import *
 from trading import *
 from block import *
+import random
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(message)s')
@@ -264,7 +265,6 @@ def create_normal_tx(peer, to_addr, value):
         addr = utxo.vout.to_addr
         idx = wallet.addrs.index(addr)
         sk, pk = wallet.keys[idx][0], wallet.keys[idx][1]
-
         string = str(utxo.pointer) + str(pk) + str(tx_out)
         message = build_message(string)
         signature = Sign(message, sk)
@@ -409,8 +409,22 @@ def get_block_reward(height, fees=0):
 
 
 # 交易广播(跟据情况实现)
-def broadcast_tx(peer, current_tx):
-    pass
+def broadcast_tx(peers, current_tx):
+    number_of_verification = 0
+    for i, peer in enumerate(peers):
+
+        if peer.verify_transaction(current_tx, peer.mem_pool):
+            if not peer._delayed_tx:
+                peer._delayed_tx = current_tx
+                continue
+
+            add_tx_to_mem_pool(peer, current_tx)
+            number_of_verification += 1
+
+        if peer.orphan_pool:
+            check_orphan_tx_from_pool(peer)
+
+    return number_of_verification
 
 
 # 登入与更新
